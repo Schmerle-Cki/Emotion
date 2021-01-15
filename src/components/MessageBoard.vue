@@ -1,7 +1,7 @@
 <template>
     <div id="message-board">        		
         <el-container style="height:100%; border: 1px solid #eee;">
-            <el-main>				
+            <el-main>					
                 <img v-if="showResult===false" :src="imageSrc"/>
 				<table style="position:absolute;left:25%;top:25%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
@@ -46,18 +46,24 @@
         data(){
             return {                
                 imageSrc:require("../assets/cuteIcon.png"),
-                images:["cuteIcon","logo","加油"],
+                images:[],	//["cuteIcon","logo","加油"],
 				labeledImg:[],	//{picName,Label} 1=happy 2=neutral 3=sad
 				answers:[],		//{userChoice,groundTruth,accurate}
                 currentImgID:0,
                 messageList: [],
 				showResult:false,
-				emotions:["none","happy","neutral","sad"]
+				emotions:["none","happy","neutral","sad"]				
             }
         },  
 		created(){
 			this.currentImgID = 0;
 			this.showResult = false;
+			const path = require('path');
+			const files = require.context('../img',true,/.png$/);
+			console.log(files);
+			files.keys().forEach(item=>{			
+				this.images.push(path.basename(item,'.png'));
+			})
 			
 			for(var imgName in this.images)
 			{
@@ -89,7 +95,7 @@
                     this.state.username=""
             },
             getCurrentImgSrc(){
-                this.imageSrc = require("../assets/" + this.images[this.currentImgID] +".png")
+                this.imageSrc = require("../img/" + this.images[this.currentImgID] +".png")				
             },
 			nextPicture(emotion){
 				// record user's answer

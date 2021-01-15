@@ -1,11 +1,5 @@
 module.exports = {
-  devServer: {
-	// Path
-<<<<<<< HEAD
-	//baseUrl: './',	
-=======
-	assetsPublicPath:'./',
->>>>>>> tmp
+  devServer: {	
 	host:'www.cartoonEmotion.com',
 	disableHostCheck: true,
     proxy: {
@@ -14,5 +8,6 @@ module.exports = {
         changOrigin: true,
       }
     }	
-  }  
+  },
+  publicPath:'./'
 }
