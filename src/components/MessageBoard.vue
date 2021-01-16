@@ -1,15 +1,17 @@
 <template>
     <div id="message-board">        		
         <el-container style="height:100%; border: 1px solid #eee;">
-            <el-main>					
+            <el-main>				
                 <img v-if="showResult===false" :src="imageSrc"/>
-				<table style="position:absolute;left:25%;top:25%;" v-if="showResult===true" border="1px" width="600px">
+				<table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
+						<td>图片类别</td>
 						<td>用户判断</td>
 						<td>实际情感</td>
 						<td>是否正确</td>
 					</tr>
 					<tr v-for="res in answers" v-bind:key=res.user>
+						<td>{{res.kind}}</td>
 						<td>{{emotions[res.user]}}</td>
 						<td>{{emotions[res.truth]}}</td>
 						<td>{{res.accurate}}</td>
@@ -45,39 +47,56 @@
         // 请在下方设计自己的数据结构及函数来完成最终的留言板功能
         data(){
             return {                
-                imageSrc:require("../assets/cuteIcon.png"),
+                imageSrc:require("../img/Y3F-20_happy.jpg"),
                 images:[],	//["cuteIcon","logo","加油"],
 				labeledImg:[],	//{picName,Label} 1=happy 2=neutral 3=sad
-				answers:[],		//{userChoice,groundTruth,accurate}
+				answers:[],		//{cartoonReal,userChoice,groundTruth,accurate}
                 currentImgID:0,
                 messageList: [],
 				showResult:false,
-				emotions:["none","happy","neutral","sad"]				
+				emotions:["none","happy","neutral","sad"],				
+				picName:"nicki"
             }
         },  
 		created(){
 			this.currentImgID = 0;
 			this.showResult = false;
 			const path = require('path');
-			const files = require.context('../img',true,/.png$/);
+			const files = require.context('../img',true,/.jpg$/);
 			console.log(files);
 			files.keys().forEach(item=>{			
-				this.images.push(path.basename(item,'.png'));
-			})
+				this.images.push(path.basename(item,'.jpg'));
+				this.picName = path.basename(item,'.jpg');
+			})			
 			
-			for(var imgName in this.images)
+			for(var imgName of this.images)
 			{
 				if(imgName.indexOf("happy")!=-1)
 				{
-					this.labeledImg.push({"name":imgName,"label":1});
+					if(imgName.indexOf("cartoon")!=-1)
+					{						
+						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":1});
+					}
+					else
+						this.labeledImg.push({"kind":"realMan","name":imgName,"label":1});
 				}
 				else if(imgName.indexOf("neutral")!=-1)
 				{
-					this.labeledImg.push({"name":imgName,"label":2});
+					if(imgName[imgName.length-1]==='n')
+					{						
+						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":2});
+					}
+					else
+						this.labeledImg.push({"kind":"realMan","name":imgName,"label":2});
 				}
 				else
 				{
-					this.labeledImg.push({"name":imgName,"label":3});
+					if(imgName.indexOf("cartoon")!=-1)
+					{						
+						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":3});
+					}
+					else
+						this.labeledImg.push({"kind":"realMan","name":imgName,"label":3});
 				}
 			}
 		},
@@ -95,15 +114,16 @@
                     this.state.username=""
             },
             getCurrentImgSrc(){
-                this.imageSrc = require("../img/" + this.images[this.currentImgID] +".png")				
+                this.imageSrc = require("../img/" + this.images[this.currentImgID] +".jpg")				
             },
 			nextPicture(emotion){
 				// record user's answer
 				var accurate = 0;
 				var groundTruth = this.labeledImg[this.currentImgID].label;
+				var kind = this.labeledImg[this.currentImgID].kind;
 				if(emotion == groundTruth)
 					accurate = 1;
-				this.answers.push({"user":emotion,"truth":groundTruth,"accurate":accurate});
+				this.answers.push({"kind":kind,"user":emotion,"truth":groundTruth,"accurate":accurate});
 					
 				// next picture
 				if(this.currentImgID < this.images.length-1)
