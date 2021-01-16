@@ -1,7 +1,8 @@
 <template>
     <div id="message-board">        		
         <el-container style="height:100%; border: 1px solid #eee;">
-            <el-main>				
+            <el-main>
+				<!--p>{{basicInfo.form.sex}}</p-->
                 <img v-if="showResult===false" :src="imageSrc"/>
 				<table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
@@ -34,10 +35,17 @@
                 </el-button>
             </el-footer>
         </el-container>
+		
+		<PostDialog
+			v-bind:dialogVisible="basicInfo.dialogVisible"
+			v-bind:state="state"
+			v-on:newMember="initialInfo"			
+		/>
     </div>
 </template>
 
 <script type="text/javascript">
+	import PostDialog from "@/components/PostDialog"
 	var randomNumber = function(){
 		return 0.5 - Math.random();
 	}
@@ -45,20 +53,27 @@
         name: "MessageBoard",
         components: {
             //MessageList
-            //PostDialog
+            PostDialog
         },
         // 请在下方设计自己的数据结构及函数来完成最终的留言板功能
         data(){
-            return {                
+            return {
+                basicInfo:{
+                  dialogVisible:true,
+                  form:{
+                      age:"",
+                      sex:"",
+                      user:""
+                    }
+                },
                 imageSrc:require("../img/Y3F-20_happy.jpg"),
-                images:[],	//["cuteIcon","logo","加油"],
+                images:[],		//["cuteIcon","logo","加油"],
 				labeledImg:[],	//{picName,Label} 1=happy 2=neutral 3=sad
 				answers:[],		//{cartoonReal,userChoice,groundTruth,accurate}
                 currentImgID:0,
                 messageList: [],
 				showResult:false,
-				emotions:["none","happy","neutral","sad"],				
-				picName:"nicki"
+				emotions:["none","happy","neutral","sad"]				
             }
         },  
 		created(){
@@ -118,6 +133,15 @@
                 else
                     this.state.username=""
             },
+			initialInfo(Block){
+				this.basicInfo.dialogVisible = false;
+				this.basicInfo.form.age = Block.age;
+				this.basicInfo.form.sex = Block.sex;
+				this.basicInfo.form.user = Block.user;
+				
+				let expireDays = 1000*60*60;
+				this.$cookieStore.setCookie(Block.user,expireDays);
+			},
             getCurrentImgSrc(){
                 this.imageSrc = require("../img/" + this.images[this.currentImgID] +".jpg")				
             },
@@ -142,11 +166,15 @@
 				}
 				
 			},
-            appendBlock(Block){
-                let expireDays = 1000*60*60
-                this.$cookieStore.setCookie(Block.user,expireDays)
+            sendBack(){
+				var form = this.basicInfo.form;
+				this.$post({"age":form.age,"sex":form.sex,"name":form.user,"data":this.answers}).then((response) =>{
+					//this.alertDialog.dialogVisible=true
+					console.log(response)
+					//this.refresh()
+				})
 
-                this.alertDialog.dialogVisible=false
+                /*this.alertDialog.dialogVisible=false
 
                 this.$post({"title":Block.title,"content":Block.content}).then((response) =>{
                     this.alertDialog.dialogVisible=true
@@ -154,7 +182,7 @@
                     this.refresh()
                 })
                 
-                this.postDialog.dialogVisible=false
+                this.postDialog.dialogVisible=false*/
             },
             refresh(){
                 this.$get().then((response)=>{
