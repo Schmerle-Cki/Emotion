@@ -38,6 +38,9 @@
 </template>
 
 <script type="text/javascript">
+	var randomNumber = function(){
+		return 0.5 - Math.random();
+	}
     export default {
         name: "MessageBoard",
         components: {
@@ -65,9 +68,11 @@
 			const files = require.context('../img',true,/.jpg$/);
 			console.log(files);
 			files.keys().forEach(item=>{			
-				this.images.push(path.basename(item,'.jpg'));
-				this.picName = path.basename(item,'.jpg');
-			})			
+				this.images.push(path.basename(item,'.jpg'));				
+			})
+			
+			// Disorder the pictures		
+			this.images.sort(randomNumber);
 			
 			for(var imgName of this.images)
 			{
