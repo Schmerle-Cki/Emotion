@@ -31,7 +31,7 @@
                 <el-button v-on:click="withdraw">一键撤销</el-button>
                 <el-button type="primary"
                             v-on:click="ensure"
-                            :disabled="state.username_valid===false"
+                            :disabled="verifyInfo()"
                             >开始实验</el-button>
                 <!--请修改这两行注释中间的代码来产生相应按钮的点击事件-->
     </span>
@@ -70,6 +70,9 @@ export default {
     }
   },
   created(){
+	this.age="";
+	this.sex="";
+	this.state.username="";
 	this.ageArr = new Array(50).fill(10).map((el,i)=>10+i);
   },
   methods: {
@@ -90,7 +93,10 @@ export default {
         this.age="";
         this.sex="";
 		this.state.username="";
-    }
+    },
+	verifyInfo(){
+		return this.state.username_valid===false||this.age===""||this.sex==="";
+	}
   },
   watch: { // 用于实时检测username是否合法
     "state.username": {
