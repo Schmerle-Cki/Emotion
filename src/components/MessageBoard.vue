@@ -120,19 +120,7 @@
 				}
 			}
 		},
-        methods:{
-            visibleAndFill(){
-                this.postDialog.dialogVisible = true
-                this.state.username_valid=false
-                var name = this.$cookieStore.getCookie()
-                if(name)
-                {
-                    this.state.username = name
-                    this.state.username_valid=true
-                }
-                else
-                    this.state.username=""
-            },
+        methods:{            
 			initialInfo(Block){
 				this.basicInfo.dialogVisible = false;
 				this.basicInfo.form.age = Block.age;
