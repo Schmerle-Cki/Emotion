@@ -25,6 +25,11 @@
 				<el-option v-for="one in ageArr" :key="one" :label="one" :value="one"></el-option>
 			</el-select>
 		</el-form-item>
+		<el-form-item label="惯用手">
+			<el-select v-model="handiness" placeholder="请选择" style="width: 100%;">
+				<el-option v-for="one in handiArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
+			</el-select>
+		</el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
                 <!--请修改这两行注释中间的代码来产生相应按钮的点击事件-->
@@ -61,10 +66,15 @@ export default {
     return {
       age:"",
       sex:"",
+      handiness:"",
       user:this.state.username,
       stateArr:[
         {value:'male',label:'男'},
 		{vlaue:'female',label:'女'}
+      ],
+      handiArr:[
+		{value:'left',label:'左手'},
+		{value:'right',label:'右手'}
       ],
       ageArr:[]
     }
@@ -83,7 +93,8 @@ export default {
         this.$emit('newMember',
         {age: this.age,
          sex: this.sex,
-        user: this.state.username})
+        user: this.state.username,
+		handiness:this.handiness})
       }
     },
     withdraw:function(event){
@@ -93,9 +104,10 @@ export default {
         this.age="";
         this.sex="";
 		this.state.username="";
+		this.handiness = "";
     },
 	verifyInfo(){
-		return this.state.username_valid===false||this.age===""||this.sex==="";
+		return this.state.username_valid===false||this.age===""||this.sex===""||this.handiness==="";
 	}
   },
   watch: { // 用于实时检测username是否合法

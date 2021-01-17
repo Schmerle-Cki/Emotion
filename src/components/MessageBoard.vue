@@ -15,8 +15,8 @@
 					</tr>
 					<tr v-for="res in answers" v-bind:key=res.user>
 						<td>{{res.kind}}</td>
-						<td>{{emotions[res.user]}}</td>
-						<td>{{emotions[res.truth]}}</td>
+						<td>{{res.user}}</td>
+						<td>{{res.truth}}</td>
 						<td>{{res.accurate}}</td>
 					</tr>
 				</table>
@@ -119,7 +119,8 @@
                   form:{
                       age:"",
                       sex:"",
-                      user:""
+                      user:"",
+                      handiness:""
                     }
                 },
                 imageSrc:require("../img/Y3F-20_happy.jpg"),
@@ -213,6 +214,7 @@
 				this.basicInfo.form.age = Block.age;
 				this.basicInfo.form.sex = Block.sex;
 				this.basicInfo.form.user = Block.user;
+				this.basicInfo.form.handiness = Block.handiness;
 				
 				let expireDays = 1000*60*60;
 				this.$cookieStore.setCookie(Block.user,expireDays);
@@ -249,7 +251,7 @@
 				var kind = this.labeledImg[this.currentImgID].kind;
 				if(emotion == groundTruth)
 					accurate = 1;
-				this.answers.push({"kind":kind,"user":emotion,"truth":groundTruth,"accurate":accurate});
+				this.answers.push({"kind":kind,"user":this.emotions[emotion],"truth":this.emotions[groundTruth],"accurate":accurate});
 					
 				// next picture
 				if(this.currentImgID < this.images[2].length-1)
@@ -259,26 +261,17 @@
 				}
 				else{					
 					this.showResult = true;
+					this.sendBack();
 				}
 				
 			},
             sendBack(){
 				var form = this.basicInfo.form;
-				this.$post({"age":form.age,"sex":form.sex,"name":form.user,"data":this.answers}).then((response) =>{
+				this.$post({"handiness":form.handiness,"age":form.age,"sex":form.sex,"name":form.user,"data":this.answers}).then((response) =>{
 					//this.alertDialog.dialogVisible=true
 					console.log(response)
 					//this.refresh()
 				})
-
-                /*this.alertDialog.dialogVisible=false
-
-                this.$post({"title":Block.title,"content":Block.content}).then((response) =>{
-                    this.alertDialog.dialogVisible=true
-                    console.log(response)
-                    this.refresh()
-                })
-                
-                this.postDialog.dialogVisible=false*/
             },
             refresh(){
                 this.$get().then((response)=>{
