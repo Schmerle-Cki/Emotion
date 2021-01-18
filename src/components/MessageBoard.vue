@@ -23,16 +23,16 @@
             </el-main>
             <el-footer v-if="showResult===false" style="text-align: center;">
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(1)">
-                    <i class="el-icon-sunny" style="font-weight: bold; font-size: 15px;">  积极</i>
+                    <i style="font-weight: bold; font-size: 15px;">  积极</i>
                 </button>
                 <!--请修改这两行注释中间的代码完成"刷新"功能-->
                 <button class="select-button" v-on:click="nextPicture(2)" style="display: inline-block;margin-right: 15px;">
                 <!--请修改这两行注释中间的代码完成"刷新"功能-->
-                    <i class="el-icon-cloudy" style="font-weight: bold; font-size: 15px;">  中性</i>
+                    <i style="font-weight: bold; font-size: 15px;">  中性</i>
                 </button>
                 <button class="select-button" v-on:click="nextPicture(3)" style="display: inline-block;margin-right: 15px;">
                 <!--请修改这两行注释中间的代码完成"刷新"功能-->
-                    <i class="el-icon-heavy-rain" style="font-weight: bold; font-size: 15px;">  消极</i>
+                    <i style="font-weight: bold; font-size: 15px;">  消极</i>
                 </button>
             </el-footer>
         </el-container>
@@ -267,7 +267,7 @@
 			},
             sendBack(){
 				var form = this.basicInfo.form;
-				this.$post({"handiness":form.handiness,"age":form.age,"sex":form.sex,"name":form.user,"data":this.answers}).then((response) =>{
+				this.$post({"gender":form.sex,"handiness":form.handiness,"age":form.age,"name":form.user,"data":this.answers}).then((response) =>{
 					//this.alertDialog.dialogVisible=true
 					console.log(response)
 					//this.refresh()

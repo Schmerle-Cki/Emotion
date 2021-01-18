@@ -13,18 +13,20 @@
             <el-input v-model="state.username"></el-input>
             <!--请修改这两行注释中间的代码来输入用户名-->
             <span v-if="state.username_valid===false" style="color: red">请设置合法用户名!</span>
-        </el-form-item>
-		<el-form-item label="性别">
-			<el-select v-model="sex" placeholder="请选择" style="width: 100%;">
-				<el-option v-for="one in stateArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
-			</el-select>
-		</el-form-item>        
+        </el-form-item>		        
 		
 		<el-form-item label="年龄">
 			<el-select v-model="age" placeholder="请选择" style="width: 100%;">
 				<el-option v-for="one in ageArr" :key="one" :label="one" :value="one"></el-option>
 			</el-select>
 		</el-form-item>
+		
+		<el-form-item label="性别">
+			<el-select v-model="sex" placeholder="请选择" style="width: 100%;">
+				<el-option v-for="one in stateArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
+			</el-select>
+		</el-form-item>
+		
 		<el-form-item label="惯用手">
 			<el-select v-model="handiness" placeholder="请选择" style="width: 100%;">
 				<el-option v-for="one in handiArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
@@ -69,12 +71,12 @@ export default {
       handiness:"",
       user:this.state.username,
       stateArr:[
-        {value:'male',label:'男'},
-		{vlaue:'female',label:'女'}
+		{vlaue:'female',label:'女'},
+        {value:'male',label:'男'}		
       ],
       handiArr:[
-		{value:'left',label:'左手'},
-		{value:'right',label:'右手'}
+		{value:'right',label:'右手'},
+		{value:'left',label:'左手'}
       ],
       ageArr:[]
     }
