@@ -19,11 +19,11 @@
 			<el-select v-model="age" placeholder="请选择" style="width: 100%;">
 				<el-option v-for="one in ageArr" :key="one" :label="one" :value="one"></el-option>
 			</el-select>
-		</el-form-item>
-		
+		</el-form-item>		
+	
 		<el-form-item label="性别">
 			<el-select v-model="sex" placeholder="请选择" style="width: 100%;">
-				<el-option v-for="one in stateArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
+				<el-option v-for="one in genderArr" :key="one.value" :label="one.label" :value="one.value"></el-option>
 			</el-select>
 		</el-form-item>
 		
@@ -73,6 +73,10 @@ export default {
       stateArr:[
 		{vlaue:'female',label:'女'},
         {value:'male',label:'男'}		
+      ],
+      genderArr:[
+			{value:'female',label:'女'},
+			{value:'male',label:'男'}
       ],
       handiArr:[
 		{value:'right',label:'右手'},

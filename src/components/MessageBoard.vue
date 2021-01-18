@@ -101,6 +101,7 @@
 
 <script type="text/javascript">
 	import PostDialog from "@/components/PostDialog"
+	//import { saveAs } from 'file-saver';
 	var randomNumber = function(){
 		return 0.5 - Math.random();
 	}	
@@ -267,12 +268,31 @@
 			},
             sendBack(){
 				var form = this.basicInfo.form;
+				this.storeData();
 				this.$post({"gender":form.sex,"handiness":form.handiness,"age":form.age,"name":form.user,"data":this.answers}).then((response) =>{
 					//this.alertDialog.dialogVisible=true
 					console.log(response)
 					//this.refresh()
 				})
             },
+			storeData(){
+				/*file = open("Statistics/ID_" + str(fileID) + '.txt', 'w')
+            file.write('ID Date gender age handiness kind user truth accurate\n')
+            # logging.debug(data)
+            for item in data:
+                file.write(name+" " + str(newUser.register_date) + " " + sex + " " + str(age) + " " + handiness + " " + item['kind'] + " " + item['user'] + " " + item['truth'] + " " + str(item['accurate'])+"\n")
+            trial.save()*/
+				var FileSaver = require('file-saver');
+				var date = new Date().toLocaleDateString();
+				var form = this.basicInfo.form;
+				var fullStr = "ID Date gender age handiness kind user truth accurate\n";
+				for(var item of this.answers)
+				{
+					fullStr += form.user+" " + date + " " + form.sex + " " + form.age + " " + form.handiness + " " + item.kind + " " + item.user + " " + item.truth + " " + item.accurate+"\n";
+				}
+				var blob = new Blob([fullStr],{type:"text/plain;charset=utf-8"});
+				FileSaver.saveAs(blob,form.user + ".txt");				
+			},
             refresh(){
                 this.$get().then((response)=>{
                     this.messageList=[]
