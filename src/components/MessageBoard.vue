@@ -4,7 +4,7 @@
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
 			
             <el-main>
-				<!--p>{{images[currentImageSrc][currentImgID]}}</p-->
+				<p>{{url}}</p>
                 <img v-if="showResult===false" :src="imageSrc"/>				
 				<table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
@@ -115,6 +115,7 @@
         data(){
             return {
 				// user's basic info
+				url:process.env.VUE_APP_URL,
                 basicInfo:{
                   dialogVisible:true,
                   form:{
@@ -269,11 +270,11 @@
             sendBack(){
 				var form = this.basicInfo.form;
 				this.storeData();
-				this.$post({"gender":form.sex,"handiness":form.handiness,"age":form.age,"name":form.user,"data":this.answers}).then((response) =>{
+				this.$post({"gender":form.sex,"handiness":form.handiness,"age":form.age,"name":form.user,"data":this.answers})//.then((response) =>{
 					//this.alertDialog.dialogVisible=true
-					console.log(response)
+					//console.log(response)
 					//this.refresh()
-				})
+				//})
             },
 			storeData(){
 				/*file = open("Statistics/ID_" + str(fileID) + '.txt', 'w')

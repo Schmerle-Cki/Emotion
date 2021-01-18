@@ -4,8 +4,13 @@ module.exports = {
 	disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // 修改为你的Django服务器地址
+        target: 'http://36f9205z97.zicp.vip', // 修改为你的Django服务器地址
+		//target:'',
         changOrigin: true,
+		ws: true,
+		pathRewrite:{
+			'^/api': '/api'
+		}
       }
     }	
   },

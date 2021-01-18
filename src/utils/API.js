@@ -4,7 +4,7 @@ const API={
         method:"get"
     },
     POST_NEW_MESSAGE:{
-        path:"/api/message",
+        path: process.env.VUE_APP_URL + "/api/message",
         method:"post"
     },
 }

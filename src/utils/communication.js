@@ -33,7 +33,10 @@ export function GET_Message(){
 }
 
 export function POST_Message(data){
-    return new Promise((resolve,reject) =>{
+	/*axios.post("http://36f9205z97.zicp.vip/api/message",data)
+	.then(            
+	)*/
+	return new Promise((resolve,reject) =>{
         axios.post(API.POST_NEW_MESSAGE.path,data).then(response =>{
             resolve(response.data);
         },err => {
