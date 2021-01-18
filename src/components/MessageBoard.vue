@@ -4,7 +4,7 @@
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
 			
             <el-main>
-				<p>{{url}}</p>
+				<!--p>{{url}}</p-->
                 <img v-if="showResult===false" :src="imageSrc"/>				
 				<table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
