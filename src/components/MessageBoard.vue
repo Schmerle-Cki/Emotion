@@ -29,13 +29,13 @@
             </el-main>
             <el-footer v-if="showResult===false && imageDisplayState === 1" style="text-align: center;">
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[0].value)">
-                    <div style="margin-left: 13px;">{{buttonEmotion[0].label}}</div>
+					{{buttonEmotion[0].label}}
                 </button>                
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[1].value)">
-                    <div style="margin-left: 13px;">{{buttonEmotion[1].label}}</div>
+                    {{buttonEmotion[1].label}}
                 </button>
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[2].value)">
-                    <div style="margin-left: 13px;">{{buttonEmotion[2].label}}</div>
+                    {{buttonEmotion[2].label}}
                 </button>
             </el-footer>
         </el-container>
@@ -392,8 +392,7 @@
 		font-style: normal;
 		font-size: 15px;
 		height: 70%;
-		width: 100px;
-		padding-right: 20px;
+		width: 100px;		
 		border-radius: 10px;
 		border-color: #e4fff6;
 	}
@@ -427,6 +426,14 @@
 		margin-left:-150px ;
 		margin-top: -150px;
 	}	
+	
+	.button-font{		
+		left:50%;
+		top:50%;
+		margin-left:-7px ;
+		margin-top: -7px;
+		font-size: 15px;
+	}
 	
 	.logicColor {
 		color: #808080;
