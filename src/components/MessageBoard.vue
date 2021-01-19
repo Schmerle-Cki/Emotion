@@ -1,13 +1,16 @@
 <template>
     <div id="message-board" style="background-color: #808080;">		
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
-			
+			<div v-if="showResult===false" class = "box">
+				<img v-if="imageDisplayState === 1" :src="imageSrc"/>
+				<p v-if="showResult===false&&imageDisplayState === 0" style="font-weight: bold;font-size: 30px; margin: 135px;">+</p>
+			</div>
             <el-main>
 				<!--p>{{url}}</p-->
-                <div v-if="showResult===false" class = "center" style="margin-top:6%;">
+                <!--div v-if="showResult===false" class = "center" style="margin-top:6%;">
 					<img v-if="imageDisplayState === 1" :src="imageSrc"/>
 					<p v-if="showResult===false&&imageDisplayState === 0" style="font-weight: bold;font-size: 30px;margin-top:20%">+</p>
-				</div>
+				</div-->
 				<p v-if="showResult===true" style="font-weight: bold;font-size: 30px;margin-top:20%; color: white;">实验结束，感谢您的参与!</p>
 				<!--table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
@@ -27,8 +30,7 @@
             <el-footer v-if="showResult===false && imageDisplayState === 1" style="text-align: center;">
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[0].value)">
                     <div style="margin-left: 13px;">{{buttonEmotion[0].label}}</div>
-                </button>
-                <!--请修改这两行注释中间的代码完成"刷新"功能-->
+                </button>                
                 <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[1].value)">
                     <div style="margin-left: 13px;">{{buttonEmotion[1].label}}</div>
                 </button>
@@ -195,45 +197,7 @@
 			// TODO:change the outside order
 			this.CarMaterial.sort(randomNumber);
 			this.RelMaterial.sort(randomNumber);
-			this.refresh();
-			/*this.formalImages = this.CarMaterial.concat(this.RelMaterial);
-			//this.formalImages.sort(randomNumber);
-			
-			// Label formal images
-			for(var imgName of this.formalImages)
-			{
-				if(imgName.indexOf("happy")!=-1)
-				{
-					if(imgName.indexOf("cartoon")!=-1)
-					{						
-						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":1});
-					}
-					else
-						this.labeledImg.push({"kind":"realMan","name":imgName,"label":1});
-				}
-				else if(imgName.indexOf("neutral")!=-1)
-				{
-					if(imgName.indexOf("cartoon")!=-1)
-					{						
-						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":2});
-					}
-					else
-						this.labeledImg.push({"kind":"realMan","name":imgName,"label":2});
-				}
-				else
-				{
-					if(imgName.indexOf("cartoon")!=-1)
-					{						
-						this.labeledImg.push({"kind":"cartoon","name":imgName,"label":3});
-					}
-					else
-						this.labeledImg.push({"kind":"realMan","name":imgName,"label":3});
-				}
-			}
-		
-			this.images.push(this.cartoonImages);
-			this.images.push(this.realmanImages);
-			this.images.push(this.formalImages);*/
+			this.refresh();			
 		},
         methods:{            
 			initialInfo(Block){
@@ -263,7 +227,7 @@
             },
 			nextPicture(emotion){
 				this.imageDisplayState = 0;
-				this.buttonEmotion.sort(randomNumber);
+				// this.buttonEmotion.sort(randomNumber);
 				// Just Practice
 				if(this.currentImageSrc<2)
 				{
@@ -324,11 +288,39 @@
                 this.$get().then((response)=>{
 					var number = response.data[0].number;
 					console.log(number);
-					if((number%2)!= 0)
+					// 实验图片来源
+					if((number%2)!= 0)					
 						this.formalImages = this.CarMaterial.concat(this.RelMaterial);
 					else
+					{
 						this.formalImages = this.RelMaterial.concat(this.CarMaterial);
-					//this.formalImages.sort(randomNumber);
+					}
+						
+					// this.formalImages.sort(randomNumber);
+					// 按钮顺序
+					if((number%6) === 1)
+					{
+						this.buttonEmotion = [{label:"消极",value:3},{label:"中性",value:2},{label:"积极",value:1}];
+					}
+					else if((number%6) === 2)
+					{
+						this.buttonEmotion = [{label:"积极",value:1},{label:"中性",value:2},{label:"消极",value:3}];
+					}
+					else if((number%6) === 3)
+					{
+						this.buttonEmotion = [{label:"中性",value:2},{label:"积极",value:1},{label:"消极",value:3}];
+					}
+					else if((number%6) === 4)
+					{
+						this.buttonEmotion = [{label:"消极",value:3},{label:"积极",value:1},{label:"中性",value:2}];
+					}
+					else if((number%6) === 5)
+					{
+						this.buttonEmotion = [{label:"中性",value:2},{label:"消极",value:3},{label:"积极",value:1}];
+					}
+					else{
+						this.buttonEmotion = [{label:"积极",value:1},{label:"消极",value:3},{label:"中性",value:2}];
+					}
 					
 					// Label formal images
 					for(var imgName of this.formalImages)
@@ -364,16 +356,7 @@
 							
 					this.images.push(this.cartoonImages);
 					this.images.push(this.realmanImages);
-					this.images.push(this.formalImages);
-					
-                    /*this.messageList=[]
-                    for(var item in response.data)
-                    {
-                        var time = response.data[item].timestamp*1000
-                        response.data[item].timestamp=time
-                        this.messageList.push(response.data[item])
-                    }
-                    this.messageList.reverse()*/
+					this.images.push(this.formalImages);					
                 })
             },
 			currentStateShowsPhoto(){
@@ -434,6 +417,16 @@
 		padding-top: 100px ;
 		color: white;
 	}
+	
+	.box{
+		position: absolute;
+		width:300px;
+		height:300px;
+		left:50%;
+		top:50%;
+		margin-left:-150px ;
+		margin-top: -150px;
+	}	
 	
 	.logicColor {
 		color: #808080;
