@@ -1,6 +1,6 @@
 const API={
     GET_MESSAGE_LIST:{
-        path:"/api/message",
+        path:process.env.VUE_APP_URL + "/api/message",
         method:"get"
     },
     POST_NEW_MESSAGE:{

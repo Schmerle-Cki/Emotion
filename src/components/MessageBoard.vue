@@ -1,12 +1,15 @@
 <template>
-    <div id="message-board">
-		<p v-if="showResult===true" style="font-weight: bold;font-size: 30px;">实验结束，感谢您的参与!</p>
+    <div id="message-board" style="background-color: #808080;">		
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
 			
             <el-main>
 				<!--p>{{url}}</p-->
-                <img v-if="showResult===false" :src="imageSrc"/>				
-				<table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
+                <div v-if="showResult===false" class = "center" style="margin-top:6%;">
+					<img v-if="imageDisplayState === 1" :src="imageSrc"/>
+					<p v-if="showResult===false&&imageDisplayState === 0" style="font-weight: bold;font-size: 30px;margin-top:20%">+</p>
+				</div>
+				<p v-if="showResult===true" style="font-weight: bold;font-size: 30px;margin-top:20%; color: white;">实验结束，感谢您的参与!</p>
+				<!--table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
 						<td>图片类别</td>
 						<td>用户判断</td>
@@ -19,30 +22,28 @@
 						<td>{{res.truth}}</td>
 						<td>{{res.accurate}}</td>
 					</tr>
-				</table>
+				</table-->
             </el-main>
-            <el-footer v-if="showResult===false" style="text-align: center;">
-                <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(1)">
-                    <i style="font-weight: bold; font-size: 15px;">  积极</i>
+            <el-footer v-if="showResult===false && imageDisplayState === 1" style="text-align: center;">
+                <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[0].value)">
+                    <div style="margin-left: 13px;">{{buttonEmotion[0].label}}</div>
                 </button>
                 <!--请修改这两行注释中间的代码完成"刷新"功能-->
-                <button class="select-button" v-on:click="nextPicture(2)" style="display: inline-block;margin-right: 15px;">
-                <!--请修改这两行注释中间的代码完成"刷新"功能-->
-                    <i style="font-weight: bold; font-size: 15px;">  中性</i>
+                <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[1].value)">
+                    <div style="margin-left: 13px;">{{buttonEmotion[1].label}}</div>
                 </button>
-                <button class="select-button" v-on:click="nextPicture(3)" style="display: inline-block;margin-right: 15px;">
-                <!--请修改这两行注释中间的代码完成"刷新"功能-->
-                    <i style="font-weight: bold; font-size: 15px;">  消极</i>
+                <button class="select-button" style="display: inline-block;margin-right: 15px;text-align: center;" v-on:click="nextPicture(buttonEmotion[2].value)">
+                    <div style="margin-left: 13px;">{{buttonEmotion[2].label}}</div>
                 </button>
             </el-footer>
         </el-container>
 		<el-container v-if="currentState===states.welcome">
 			<el-main>
 				<p class="main-font"  style="top:80%">欢迎参加实验</p>
-				<p>您将看到一些真人面孔和卡通图片,</p>
-				<p v-html="highLight('请回答面孔所表达的情绪类型,','情绪类型')"></p>
-				<p v-html="highLight('并用鼠标点击对应的按钮,','鼠标点击')"></p>
-				<p v-html="highLight('准确又快速地反应','准确又快速')"></p>
+				<p style="color: white;">您将看到一些真人面孔和卡通图片,</p>
+				<p style="color: white;" v-html="highLight('请回答面孔所表达的情绪类型,','情绪类型')"></p>
+				<p style="color: white;" v-html="highLight('并用鼠标点击对应的按钮,','鼠标点击')"></p>
+				<p style="color: white;" v-html="highLight('准确又快速地反应','准确又快速')"></p>
 			</el-main>
 			<el-footer style="text-align: center; font-size: 10px">
 				<el-button class="press-button" style="display: inline-block;margin-right: 15px;" 
@@ -54,7 +55,7 @@
 		<el-container v-if="currentState===states.enterC">
 			<el-main>
 				<p class="main-font" style="top:80%">卡通画</p>
-				<p v-html="highLight('请准确又快速地判断卡通人脸的表情','准确又快速')"></p>
+				<p style="color: white;" v-html="highLight('请准确又快速地判断卡通人脸的表情','准确又快速')"></p>
 			</el-main>
 			<el-footer style="text-align: center; font-size: 10px; font-weight: bold;font-family:'Times New Roman', Times, serif">
 				<el-button class="press-button" style="display: inline-block;margin-right: 15px;" 
@@ -66,7 +67,7 @@
 		<el-container v-if="currentState===states.enterP">
 			<el-main>
 				<p class="main-font" style="top:80%">真人</p>
-				<p v-html="highLight('请准确又快速地判断真实人脸的表情','准确又快速')"></p>
+				<p style="color: white;" v-html="highLight('请准确又快速地判断真实人脸的表情','准确又快速')"></p>
 			</el-main>
 			<el-footer style="text-align: center; font-size: 10px">
 				<el-button class="press-button" style="display: inline-block;margin-right: 15px;" 
@@ -86,10 +87,13 @@
 				</el-button>				
 			</el-footer>
 		</el-container>
-		<el-container v-if="currentState===states.end">
-			<el-main style="top:50%">
-				<p class="main-font" style="top:80%">实验结束，感谢您的参与</p>
-			</el-main>			
+		<el-container v-if="currentState===states.end" style="height:100%; border: 1px solid #eee;">			
+			<el-header>
+				<p>实验结束，感谢您的参与</p>
+				<div class = "center main-font">
+					实验结束，感谢您的参与
+				</div>
+			</el-header>						
 		</el-container>
 		<PostDialog
 			v-bind:dialogVisible="basicInfo.dialogVisible && currentState===states.info"
@@ -125,7 +129,7 @@
                       handiness:""
                     }
                 },
-                imageSrc:require("../img/Y3F-20_happy.jpg"),
+                imageSrc:require("../img/formal/Y3F-20_happy.jpg"),
                 images:[],			//currentDataSet used
 				formalImages:[],
 				cartoonImages:[],
@@ -137,8 +141,18 @@
                 messageList: [],
 				showResult:false,
 				emotions:["none","happy","neutral","sad"],
+				// 状态机取值集合
 				states:{info:0,welcome:1,enterC:2,cartoonPractice:3,enterP:4,realPractice:5,enterFormal:6,formal:7,end:8},
+				// 状态机当前状态
 				currentState:0,
+				// 十字显示
+				imageDisplayState:0,
+				// 正式实验的图片
+				CarMaterial:[],
+				RelMaterial:[],
+				// 按钮相对位置可切换
+				buttonEmotion:[{label:"积极",value:1},{label:"中性",value:2},{label:"消极",value:3}],
+				// 文本高亮
 				highLight:function(val,keyword)
 				{
 					val = val+'';
@@ -146,19 +160,25 @@
 						return val.replace(keyword,'<font color="#f00">' + keyword + '</font>');
 					}
 					else{
-						return val;
+						return val.replace(keyword,'<font color="#ffffff">' + keyword + '</font>');
 					}
 				}
             }
         },  
 		created(){
 			this.currentImgID = 0;
-			this.showResult = false;
+			this.showResult = false;		
+			
 			const path = require('path');
 			// Formal Ones
-			const files = require.context('../img',true,/.jpg$/);			
-			files.keys().forEach(item=>{			
-				this.formalImages.push(path.basename(item,'.jpg'));				
+			const files = require.context('../img/formal',true,/.jpg$/);			
+			files.keys().forEach(item=>{
+				var name = path.basename(item,'.jpg');
+				if(name.indexOf("cartoon")!==-1)
+					this.CarMaterial.push(name);
+				else
+					this.RelMaterial.push(name);
+				//this.formalImages.push(path.basename(item,'.jpg'));				
 			})
 			// Cartoon Practice
 			const files1 = require.context('../img/practiceCartoon',true,/.jpg$/);
@@ -171,8 +191,13 @@
 				this.realmanImages.push(path.basename(item,'.jpg'));				
 			})
 			
-			// Disorder the pictures		
-			this.formalImages.sort(randomNumber);
+			// Inner Disorder the pictures
+			// TODO:change the outside order
+			this.CarMaterial.sort(randomNumber);
+			this.RelMaterial.sort(randomNumber);
+			this.refresh();
+			/*this.formalImages = this.CarMaterial.concat(this.RelMaterial);
+			//this.formalImages.sort(randomNumber);
 			
 			// Label formal images
 			for(var imgName of this.formalImages)
@@ -208,7 +233,7 @@
 		
 			this.images.push(this.cartoonImages);
 			this.images.push(this.realmanImages);
-			this.images.push(this.formalImages);
+			this.images.push(this.formalImages);*/
 		},
         methods:{            
 			initialInfo(Block){
@@ -223,14 +248,22 @@
 				this.currentState = this.states.welcome;
 			},
             getCurrentImgSrc(){
-				if(this.currentImageSrc === 0)
-					this.imageSrc = require("../img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
-				else if(this.currentImageSrc === 1)
-					this.imageSrc = require("../img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
-				else
-					this.imageSrc = require("../img/" + this.images[2][this.currentImgID] +".jpg")			
+				this.timeOut = setTimeout(() => {
+					
+					console.log("ImageSrc:" + this.currentImageSrc);
+					
+					if(this.currentImageSrc === 0)
+						this.imageSrc = require("../img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
+					else if(this.currentImageSrc === 1)
+						this.imageSrc = require("../img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
+					else
+						this.imageSrc = require("../img/formal/" + this.images[2][this.currentImgID] +".jpg")
+					this.imageDisplayState = 1;
+				}, 500);							
             },
 			nextPicture(emotion){
+				this.imageDisplayState = 0;
+				this.buttonEmotion.sort(randomNumber);
 				// Just Practice
 				if(this.currentImageSrc<2)
 				{
@@ -264,8 +297,7 @@
 				else{					
 					this.showResult = true;
 					this.sendBack();
-				}
-				
+				}				
 			},
             sendBack(){
 				var form = this.basicInfo.form;
@@ -276,13 +308,7 @@
 					//this.refresh()
 				//})
             },
-			storeData(){
-				/*file = open("Statistics/ID_" + str(fileID) + '.txt', 'w')
-            file.write('ID Date gender age handiness kind user truth accurate\n')
-            # logging.debug(data)
-            for item in data:
-                file.write(name+" " + str(newUser.register_date) + " " + sex + " " + str(age) + " " + handiness + " " + item['kind'] + " " + item['user'] + " " + item['truth'] + " " + str(item['accurate'])+"\n")
-            trial.save()*/
+			storeData(){			
 				var FileSaver = require('file-saver');
 				var date = new Date().toLocaleDateString();
 				var form = this.basicInfo.form;
@@ -296,14 +322,58 @@
 			},
             refresh(){
                 this.$get().then((response)=>{
-                    this.messageList=[]
+					var number = response.data[0].number;
+					console.log(number);
+					if((number%2)!= 0)
+						this.formalImages = this.CarMaterial.concat(this.RelMaterial);
+					else
+						this.formalImages = this.RelMaterial.concat(this.CarMaterial);
+					//this.formalImages.sort(randomNumber);
+					
+					// Label formal images
+					for(var imgName of this.formalImages)
+					{
+						if(imgName.indexOf("happy")!=-1)
+						{
+							if(imgName.indexOf("cartoon")!=-1)
+							{						
+								this.labeledImg.push({"kind":"cartoon","name":imgName,"label":1});
+							}
+							else
+								this.labeledImg.push({"kind":"realMan","name":imgName,"label":1});
+						}
+						else if(imgName.indexOf("neutral")!=-1)
+						{
+							if(imgName.indexOf("cartoon")!=-1)
+							{						
+								this.labeledImg.push({"kind":"cartoon","name":imgName,"label":2});
+							}
+							else
+								this.labeledImg.push({"kind":"realMan","name":imgName,"label":2});
+						}
+						else
+						{
+							if(imgName.indexOf("cartoon")!=-1)
+							{						
+								this.labeledImg.push({"kind":"cartoon","name":imgName,"label":3});
+							}
+							else
+								this.labeledImg.push({"kind":"realMan","name":imgName,"label":3});
+						}
+					}
+							
+					this.images.push(this.cartoonImages);
+					this.images.push(this.realmanImages);
+					this.images.push(this.formalImages);
+					
+                    /*this.messageList=[]
                     for(var item in response.data)
                     {
                         var time = response.data[item].timestamp*1000
                         response.data[item].timestamp=time
                         this.messageList.push(response.data[item])
                     }
-                    this.messageList.reverse()
+                    this.messageList.reverse()*/
                 })
             },
 			currentStateShowsPhoto(){
@@ -334,22 +404,23 @@
 	.select-button{
 		background-color: #c4dbff;
 		color: #000000;	
-		font-family:"times new roman";
+		font-family: "microsoft yahei";
 		font-weight: bold;
+		font-style: normal;
+		font-size: 15px;
 		height: 70%;
 		width: 100px;
 		padding-right: 20px;
-		border-radius: 20px;
+		border-radius: 10px;
 		border-color: #e4fff6;
 	}
 	
     .el-header {
-        background-color: #B3C0D1;
+        //background-color: #B3C0D1;
         color: #333;
         line-height: 60px;
     }
-    .el-footer {
-        background-color: #ffffff;
+    .el-footer {        
         color: #333;
         line-height: 60px;
     }
@@ -359,7 +430,12 @@
 	.main-font {
 		font-size: 30px;
 		font-family:"times new roman";
-		font-weight: bold;
-		padding-top: 100px;
+		font-weight: bold;	
+		padding-top: 100px ;
+		color: white;
+	}
+	
+	.logicColor {
+		color: #808080;
 	}
 </style>
