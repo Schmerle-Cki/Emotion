@@ -1,6 +1,10 @@
 <template>
     <div id="message-board" style="background-color: #808080;">
-        <!--preload-image v-if="loading === true" :imgUrlArr="imgUrls" @imgAllLoaded="loading=false"></preload-image-->
+        <preload-image v-if="loading === true" :imgUrlArr="imgUrls" @imgAllLoaded="loading=false"></preload-image>
+		<!--div class="box" v-if="loading === true" id="loading-panel">
+			<h1><strong>Loading...</strong></h1>
+			<h2><strong>{{percent}}</strong></h2>
+		</div-->
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
             <el-main>
                 <div v-if="showResult===false" class = "box">
@@ -102,7 +106,7 @@
 
 <script type="text/javascript">
     import PostDialog from "@/components/PostDialog"
-    //import preloadImage from 'vue-preload-image'
+    import preloadImage from 'vue-preload-image'
     //import getImageList from '../utils/loadImage'
     
     //import { saveAs } from 'file-saver';
@@ -113,15 +117,17 @@
         name: "MessageBoard",
         components: {
             //MessageList
-            PostDialog
-            ///preloadImage
+            PostDialog,
+            preloadImage
         },
         // 请在下方设计自己的数据结构及函数来完成最终的留言板功能
         data(){
             return {
                 // user's basic info
 				count:0,
-                loading:false,
+				sum:126,
+				percent:'',
+                loading:true,
                 imgUrls:this.preload(),
                 url:process.env.VUE_APP_URL,
                 basicInfo:{
@@ -133,7 +139,7 @@
                       handiness:""
                     }
                 },
-                imageSrc:require("../../static/img/formal/Y3F-20_happy.jpg"),
+                imageSrc:"",
                 images:[],			//currentDataSet used
                 formalImages:[],
                 cartoonImages:[],
@@ -202,33 +208,46 @@
             this.refresh();			
         },
         mounted:function(){
-            this.preload();
+            //this.preload();
         },
-        methods:{   
+        watch: {
+            count: function(val) {
+              console.log("count:" + val)
+              if (val === this.sum) {
+                // 图片加载完成后跳转页面
+                this.loading = false;
+              }
+            }
+        },
+		methods:{   
             preload(){
+				console.log("entering preload");
                 const path = require('path');				
                 let imgs = [];
                 const files1 = require.context('../../static/img/practiceCartoon',true,/.jpg$/);
-                files1.keys().forEach(item=>{			
-                    imgs.push(path.basename(item,'.jpg'));				
+                files1.keys().forEach(item=>{					
+                    imgs.push('static/img/practiceCartoon/'+path.basename(item,'.jpg')+'.jpg');				
                 });
                 // RealMan Practice
                 const files2 = require.context('../../static/img/practiceReal',true,/.jpg$/);
                 files2.keys().forEach(item=>{			
-                    imgs.push(path.basename(item,'.jpg'));				
+                    imgs.push('static/img/practiceReal/' + path.basename(item,'.jpg')+'.jpg');				
                 });
                 const files = require.context('../../static/img/formal',true,/.jpg$/);
                 files.keys().forEach(item=>{
-                    imgs.push(path.basename(item,'.jpg'));		
+                    imgs.push('static/img/formal/' + path.basename(item,'.jpg')+'.jpg');		
                 });               
                                 
-                for (let img of imgs) {
+                /*for (let img of imgs) {
+					console.log(img);
                     let image = new Image();
                     image.src = img;
                     image.onload = () => {
                         this.count +=1 ;
+						let percentNum = Math.floor(this.count / this.sum * 100)
+						this.percent = ''+percentNum;
                     };
-                }
+                }*/
 				return imgs;
             },
             initialInfo(Block){
@@ -248,11 +267,11 @@
                     console.log("ImageSrc:" + this.currentImageSrc);
                     
                     if(this.currentImageSrc === 0)
-                        this.imageSrc = require("../../static/img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
+                        this.imageSrc = ("static/img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
                     else if(this.currentImageSrc === 1)
-                        this.imageSrc = require("../../static/img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
+                        this.imageSrc = ("static/img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
                     else
-                        this.imageSrc = require("../../static/img/formal/" + this.images[2][this.currentImgID] +".jpg")
+                        this.imageSrc = ("static/img/formal/" + this.images[2][this.currentImgID] +".jpg")
                     this.imageDisplayState = 1;
                 }, 500);							
             },
