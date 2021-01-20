@@ -1,6 +1,6 @@
 <template>
     <div id="message-board" style="background-color: #808080;">
-        <preload-image v-if="loading === true" :imgUrlArr="imgUrls" @imgAllLoaded="loading=false"></preload-image>
+        <!--preload-image v-if="loading === true" :imgUrlArr="imgUrls" @imgAllLoaded="loading=false"></preload-image-->
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
             <el-main>
                 <div v-if="showResult===false" class = "box">
@@ -102,7 +102,7 @@
 
 <script type="text/javascript">
     import PostDialog from "@/components/PostDialog"
-    import preloadImage from 'vue-preload-image'
+    //import preloadImage from 'vue-preload-image'
     //import getImageList from '../utils/loadImage'
     
     //import { saveAs } from 'file-saver';
@@ -113,14 +113,15 @@
         name: "MessageBoard",
         components: {
             //MessageList
-            PostDialog,
-            preloadImage
+            PostDialog
+            ///preloadImage
         },
         // 请在下方设计自己的数据结构及函数来完成最终的留言板功能
         data(){
             return {
                 // user's basic info
-                loading:true,
+				count:0,
+                loading:false,
                 imgUrls:this.preload(),
                 url:process.env.VUE_APP_URL,
                 basicInfo:{
@@ -201,7 +202,7 @@
             this.refresh();			
         },
         mounted:function(){
-            //this.preload();
+            this.preload();
         },
         methods:{   
             preload(){
@@ -219,17 +220,16 @@
                 const files = require.context('../../static/img/formal',true,/.jpg$/);
                 files.keys().forEach(item=>{
                     imgs.push(path.basename(item,'.jpg'));		
-                });
-                
-                return imgs;
-                
-                /*for (let img of imgs) {
+                });               
+                                
+                for (let img of imgs) {
                     let image = new Image();
                     image.src = img;
                     image.onload = () => {
-                        
+                        this.count +=1 ;
                     };
-                }*/
+                }
+				return imgs;
             },
             initialInfo(Block){
                 this.basicInfo.dialogVisible = false;
