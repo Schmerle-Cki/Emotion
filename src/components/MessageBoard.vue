@@ -3,14 +3,12 @@
         <el-container v-if="currentStateShowsPhoto()" style="height:100%; border: 1px solid #eee;">
 			<div v-if="showResult===false" class = "box">
 				<img v-if="imageDisplayState === 1" :src="imageSrc"/>
+				<!--preload-image :imgUrlArr="imgUrls" @imgAllLoaded="fn" :animationShow="false">
+					<img v-if="imageDisplayState === 1" :src="imageSrc"/>
+				</preload-image-->
 				<p v-if="showResult===false&&imageDisplayState === 0" style="font-weight: bold;font-size: 30px; margin: 135px;">+</p>
 			</div>
-            <el-main>
-				<!--p>{{url}}</p-->
-                <!--div v-if="showResult===false" class = "center" style="margin-top:6%;">
-					<img v-if="imageDisplayState === 1" :src="imageSrc"/>
-					<p v-if="showResult===false&&imageDisplayState === 0" style="font-weight: bold;font-size: 30px;margin-top:20%">+</p>
-				</div-->
+            <el-main>				
 				<p v-if="showResult===true" style="font-weight: bold;font-size: 30px;margin-top:20%; color: white;">实验结束，感谢您的参与!</p>
 				<!--table style="position:absolute;left:25%;top:15%;" v-if="showResult===true" border="1px" width="600px">
 					<tr>
@@ -107,6 +105,9 @@
 
 <script type="text/javascript">
 	import PostDialog from "@/components/PostDialog"
+	//import preloadImage from 'vue-preload-image'
+	//import getImageList from '../utils/loadImage'
+	
 	//import { saveAs } from 'file-saver';
 	var randomNumber = function(){
 		return 0.5 - Math.random();
@@ -116,11 +117,13 @@
         components: {
             //MessageList
             PostDialog
+			//preloadImage
         },
         // 请在下方设计自己的数据结构及函数来完成最终的留言板功能
         data(){
             return {
 				// user's basic info
+				//imgUrls:this.$getImage(),
 				url:process.env.VUE_APP_URL,
                 basicInfo:{
                   dialogVisible:true,
@@ -199,7 +202,35 @@
 			this.RelMaterial.sort(randomNumber);
 			this.refresh();			
 		},
-        methods:{            
+        mounted:function(){
+			this.preload();
+        },
+		methods:{   
+			preload(){
+				const path = require('path');				
+				let imgs = [];
+				const files1 = require.context('../img/practiceCartoon',true,/.jpg$/);
+				files1.keys().forEach(item=>{			
+					imgs.push(path.basename(item,'.jpg'));				
+				});
+				// RealMan Practice
+				const files2 = require.context('../img/practiceReal',true,/.jpg$/);
+				files2.keys().forEach(item=>{			
+					imgs.push(path.basename(item,'.jpg'));				
+				});
+				const files = require.context('../img/formal',true,/.jpg$/);
+				files.keys().forEach(item=>{
+					imgs.push(path.basename(item,'.jpg'));		
+				});					
+				
+				for (let img of imgs) {
+					let image = new Image();
+					image.src = img;
+					image.onload = () => {
+						
+					};
+				}
+			},
 			initialInfo(Block){
 				this.basicInfo.dialogVisible = false;
 				this.basicInfo.form.age = Block.age;

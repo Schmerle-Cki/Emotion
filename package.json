@@ -13,7 +13,10 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
     "file-saver": "^2.0.5",
+    "pug": "^3.0.0",
+    "pug-plain-loader": "^1.1.0",
     "qs": "^6.9.4",
+    "sass-loader": "^10.1.1",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-router": "^3.3.4"
@@ -31,6 +34,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "mockjs": "^1.1.0",
+    "vue-preload-image": "^1.0.3",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
