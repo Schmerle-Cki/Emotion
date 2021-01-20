@@ -132,7 +132,7 @@
                       handiness:""
                     }
                 },
-                imageSrc:require("../img/formal/Y3F-20_happy.jpg"),
+                imageSrc:require("../../static/img/formal/Y3F-20_happy.jpg"),
                 images:[],			//currentDataSet used
                 formalImages:[],
                 cartoonImages:[],
@@ -174,7 +174,7 @@
             
             const path = require('path');
             // Formal Ones
-            const files = require.context('../img/formal',true,/.jpg$/);			
+            const files = require.context('../../static/img/formal',true,/.jpg$/);			
             files.keys().forEach(item=>{
                 var name = path.basename(item,'.jpg');
                 if(name.indexOf("cartoon")!==-1)
@@ -184,12 +184,12 @@
                 //this.formalImages.push(path.basename(item,'.jpg'));				
             })
             // Cartoon Practice
-            const files1 = require.context('../img/practiceCartoon',true,/.jpg$/);
+            const files1 = require.context('../../static/img/practiceCartoon',true,/.jpg$/);
             files1.keys().forEach(item=>{			
                 this.cartoonImages.push(path.basename(item,'.jpg'));				
             })
             // RealMan Practice
-            const files2 = require.context('../img/practiceReal',true,/.jpg$/);
+            const files2 = require.context('../../static/img/practiceReal',true,/.jpg$/);
             files2.keys().forEach(item=>{			
                 this.realmanImages.push(path.basename(item,'.jpg'));				
             })
@@ -207,16 +207,16 @@
             preload(){
                 const path = require('path');				
                 let imgs = [];
-                const files1 = require.context('../img/practiceCartoon',true,/.jpg$/);
+                const files1 = require.context('../../static/img/practiceCartoon',true,/.jpg$/);
                 files1.keys().forEach(item=>{			
                     imgs.push(path.basename(item,'.jpg'));				
                 });
                 // RealMan Practice
-                const files2 = require.context('../img/practiceReal',true,/.jpg$/);
+                const files2 = require.context('../../static/img/practiceReal',true,/.jpg$/);
                 files2.keys().forEach(item=>{			
                     imgs.push(path.basename(item,'.jpg'));				
                 });
-                const files = require.context('../img/formal',true,/.jpg$/);
+                const files = require.context('../../static/img/formal',true,/.jpg$/);
                 files.keys().forEach(item=>{
                     imgs.push(path.basename(item,'.jpg'));		
                 });
@@ -248,11 +248,11 @@
                     console.log("ImageSrc:" + this.currentImageSrc);
                     
                     if(this.currentImageSrc === 0)
-                        this.imageSrc = require("../img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
+                        this.imageSrc = require("../../static/img/practiceCartoon/" + this.images[0][this.currentImgID] +".jpg");
                     else if(this.currentImageSrc === 1)
-                        this.imageSrc = require("../img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
+                        this.imageSrc = require("../../static/img/practiceReal/" + this.images[1][this.currentImgID] +".jpg");
                     else
-                        this.imageSrc = require("../img/formal/" + this.images[2][this.currentImgID] +".jpg")
+                        this.imageSrc = require("../../static/img/formal/" + this.images[2][this.currentImgID] +".jpg")
                     this.imageDisplayState = 1;
                 }, 500);							
             },
